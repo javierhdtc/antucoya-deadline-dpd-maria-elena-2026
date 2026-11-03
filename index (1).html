@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cuenta regresiva · Votación María Elena 2026</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:transparent;font-family:Arial,Helvetica,sans-serif}
+.panel{max-width:900px;margin:0 auto;background:#103c54;color:#fff;border-radius:16px;padding:30px 18px;text-align:center}
+h1{font-size:clamp(22px,4vw,31px);line-height:1.3;margin:0 0 14px}
+.description{font-size:16px;line-height:1.55;color:#d4e5eb;margin:0 auto 26px;max-width:600px}
+.timer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;max-width:510px;margin:0 auto 22px}
+.unit{background:#fff;border-radius:10px;padding:15px 4px;color:#103c54;min-width:0}
+.number{font-size:clamp(25px,6vw,39px);font-weight:800;font-variant-numeric:tabular-nums}
+.label{font-size:11px;font-weight:700;color:#516879}
+.status{font-size:15px;line-height:1.5;color:#bce7e7}
+@media(max-width:400px){.panel{padding:24px 10px}.timer{gap:5px}.unit{padding:12px 2px}.label{font-size:9px}}
+</style>
+</head>
+<body>
+<main class="panel">
+<h1 id="title">¡La votación comienza pronto!</h1>
+<p id="description" class="description">Prepárate para elegir la iniciativa comunitaria que quieres apoyar.</p>
+<div id="timer" class="timer" role="timer" aria-label="Tiempo restante para abrir la votación">
+<div class="unit"><div id="days" class="number">--</div><div class="label">DÍAS</div></div>
+<div class="unit"><div id="hours" class="number">--</div><div class="label">HORAS</div></div>
+<div class="unit"><div id="minutes" class="number">--</div><div class="label">MINUTOS</div></div>
+<div class="unit"><div id="seconds" class="number">--</div><div class="label">SEGUNDOS</div></div>
+</div>
+<div id="status" class="status" aria-live="polite">Apertura: viernes 6 de noviembre · 00:00 horas (Chile continental)</div>
+</main>
+<script>
+(() => {
+  const opening = Date.parse("2026-11-06T00:00:00-03:00");
+  const closing = Date.parse("2026-11-09T00:00:00-03:00");
+  const $ = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2, "0");
+  function render() {
+    const now = Date.now();
+    if (now >= closing) {
+      $("title").textContent = "La votación ha finalizado";
+      $("description").textContent = "Gracias por participar en Diálogos para el Desarrollo María Elena 2026.";
+      $("timer").hidden = true;
+      $("status").textContent = "Período de votación finalizado.";
+      return;
+    }
+    if (now >= opening) {
+      $("title").textContent = "¡La votación ya está abierta!";
+      $("description").textContent = "Ingresa a la votación y elige la iniciativa comunitaria que quieres apoyar.";
+      $("timer").hidden = true;
+      $("status").textContent = "Votación disponible hasta el 8 de noviembre de 2026.";
+      return;
+    }
+    const seconds = Math.max(0, Math.ceil((opening - now) / 1000));
+    $("days").textContent = pad(Math.floor(seconds / 86400));
+    $("hours").textContent = pad(Math.floor(seconds / 3600) % 24);
+    $("minutes").textContent = pad(Math.floor(seconds / 60) % 60);
+    $("seconds").textContent = pad(seconds % 60);
+  }
+  render();
+  setInterval(render, 1000);
+})();
+</script>
+</body>
+</html>
